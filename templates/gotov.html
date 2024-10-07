@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Label Generator</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Основные стили для формы и полей */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Отключаем прокрутку страницы */
+        }
+
+        .container {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 1000px; /* Увеличиваем ширину контейнера для сетки */
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px; /* Уменьшили размер заголовка */
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* Сетка с 4 колонками */
+            gap: 10px; /* Отступы между элементами */
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+            font-size: 12px; /* Уменьшили размер текста */
+            margin-bottom: 4px;
+        }
+
+        select, input[type="text"], textarea {
+            width: 100%;
+            padding: 8px; /* Уменьшили отступы */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 12px; /* Уменьшили размер шрифта */
+            box-sizing: border-box;
+            resize: none;
+            min-height: 35px; /* Уменьшили минимальную высоту */
+        }
+
+        textarea {
+            transition: height 0.2s ease;
+            overflow: hidden;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px; /* Уменьшили отступы */
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px; /* Уменьшили размер шрифта */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #1976D2;
+        }
+
+        /* Специальные стили для выбора шаблона */
+        .template-selection {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .template-selection select {
+            width: 180px;
+            padding: 8px;
+            font-size: 12px;
+        }
+
+        /* Адаптивные стили для небольших экранов */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr); /* Уменьшаем количество колонок до 2 */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+                padding: 10px;
+            }
+
+            .form-grid {
+                grid-template-columns: repeat(1, 1fr); /* 1 колонка на маленьких экранах */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Создание этикетки</h1>
+
+        <!-- Выбор шаблона -->
+        <div class="template-selection">
+            <label for="template">Шаблон:</label>
+            <select id="template" name="template">
+                {% for key in templates %}
+                    <option value="{{ key }}">{{ key }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Форма -->
+        <form action="/generate" method="POST" class="form-grid">
+            <div class="form-group">
+                <label>Изготовитель:</label>
+                <textarea id="manufacturer" name="manufacturer"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Место нахождения:</label>
+                <textarea id="location" name="location"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Адрес:</label>
+                <textarea id="address" name="address"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Название продукта:</label>
+                <textarea id="product_name" name="product_name"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Состав:</label>
+                <textarea id="composition" name="composition"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Может содержать:</label>
+                <textarea id="may_contain" name="may_contain"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Пищевая ценность:</label>
+                <textarea id="nutritional_value" name="nutritional_value"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Энергетическая ценность:</label>
+                <textarea id="energi" name="energi"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Условия хранения:</label>
+                <textarea id="storage_conditions" name="storage_conditions"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Масса нетто:</label>
+                <textarea id="net_weight" name="net_weight"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>ГОСТ:</label>
+                <textarea id="gost" name="gost"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="size">Размер этикетки:</label>
+                <select name="size">
+                    <option value="90 x 60">90 x 60</option>
+                    <option value="58 x 40">58 x 40</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="file_type">Формат файла:</label>
+                <select name="file_type">
+                    <option value="docx">Word (.docx)</option>
+                    <option value="txt">Text (.txt)</option>
+                    <option value="xlsx">Excel (.xlsx)</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="grid-column: span 4;"> <!-- Кнопка на всю ширину -->
+                <button type="submit">Создать этикетку</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Скрипт для динамической подгрузки данных по шаблону -->
+    <script>
+        $(document).ready(function() {
+            // Автоподстройка textarea по высоте текста
+            function autoResizeTextarea() {
+                this.style.height = 'auto'; // Сбрасываем высоту
+                this.style.height = (this.scrollHeight) + 'px'; // Устанавливаем новую высоту
+            }
+
+            // При вводе текста автоматически подстраиваем высоту textarea
+            $('textarea').on('input', autoResizeTextarea);
+
+            // Подгрузка данных при выборе шаблона
+            $('#template').change(function() {
+                var selectedTemplate = $(this).val();
+                $.ajax({
+                    url: '/get_template_data',
+                    type: 'POST',
+                    data: { template: selectedTemplate },
+                    success: function(data) {
+                        // Заполняем поля данными шаблона
+                        $('#manufacturer').val(data.manufacturer).trigger('input');
+                        $('#location').val(data.location).trigger('input');
+                        $('#address').val(data.address).trigger('input');
+                        $('#product_name').val(data.product_name).trigger('input');
+                        $('#composition').val(data.composition).trigger('input');
+                        $('#may_contain').val(data.may_contain).trigger('input');
+                        $('#nutritional_value').val(data.nutritional_value).trigger('input');
+                        $('#energi').val(data.energi).trigger('input');
+                        $('#storage_conditions').val(data.storage_conditions).trigger('input');
+                        $('#net_weight').val(data.net_weight).trigger('input');
+                        $('#gost').val(data.gost).trigger('input');
+                    }
+                });
+            });
+
+            // Изначально подстраиваем высоту текстовых полей при загрузке страницы
+            $('textarea').each(autoResizeTextarea);
+        });
+    </script>
+</body>
+</html>

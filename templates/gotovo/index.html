@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание этикетки</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        select, input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 12px;
+            box-sizing: border-box;
+            resize: none;
+            min-height: 35px;
+        }
+
+        textarea {
+            transition: height 0.2s ease;
+            overflow: hidden;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #1976D2;
+        }
+
+        .template-selection {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .template-selection select {
+            width: 180px;
+            padding: 8px;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+                padding: 10px;
+            }
+
+            .form-grid {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Создание этикетки</h1>
+
+        <!-- Выбор категории -->
+        <div class="form-group">
+            <label for="category">Выберите категорию:</label>
+            <select id="category" name="category">
+                <option value="none" selected disabled>Выберите категорию</option>
+                <option value="soups">Супы</option>
+                <option value="sauces">Соусы</option>
+            </select>
+        </div>
+
+        <!-- Выбор подкатегории -->
+        <div class="form-group">
+            <label for="subcategory">Выберите подкатегорию:</label>
+            <select id="subcategory" name="subcategory" disabled>
+                <option value="none" selected>Выберите подкатегорию</option>
+            </select>
+        </div>
+
+        <!-- Форма -->
+        <form action="/generate" method="POST" class="form-grid">
+            <div class="form-group">
+                <label>Изготовитель:</label>
+                <textarea id="manufacturer" name="manufacturer"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Место нахождения:</label>
+                <textarea id="location" name="location"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Адрес:</label>
+                <textarea id="address" name="address"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Название продукта:</label>
+                <textarea id="product_name" name="product_name"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Состав:</label>
+                <textarea id="composition" name="composition"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Может содержать:</label>
+                <textarea id="may_contain" name="may_contain"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Пищевая ценность:</label>
+                <textarea id="nutritional_value" name="nutritional_value"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Энергетическая ценность:</label>
+                <textarea id="energi" name="energi"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Условия хранения:</label>
+                <textarea id="storage_conditions" name="storage_conditions"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Масса нетто:</label>
+                <textarea id="net_weight" name="net_weight"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>ГОСТ:</label>
+                <textarea id="gost" name="gost"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="size">Размер этикетки:</label>
+                <select name="size">
+                    <option value="90 x 60">90 x 60</option>
+                    <option value="58 x 40">58 x 40</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="file_type">Формат файла:</label>
+                <select name="file_type">
+                    <option value="docx">Word (.docx)</option>
+                    <option value="txt">Text (.txt)</option>
+                    <option value="xlsx">Excel (.xlsx)</option>
+                </select>
+            </div>
+
+            <!-- Поле выбора тары -->
+            <div class="form-group">
+                <label for="container_type">Какая тара будет использоваться?</label>
+                <select id="container_type" name="container_type">
+                    <option value="glass">Стекло</option>
+                    <option value="doypack">Дойпак</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="grid-column: span 4;">
+                <button type="submit">Создать этикетку</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Определяем категории и подкатегории
+            var subcategories = {
+                soups: ['Борщ', 'Щи', 'Солянка'],
+                sauces: ['Кетчуп', 'Соус', 'Томатная паста']
+            };
+
+            // Обработка события при изменении категории
+            $('#category').change(function() {
+                var category = $(this).val();
+                var subcategorySelect = $('#subcategory');
+
+                // Очищаем предыдущие опции подкатегории
+                subcategorySelect.empty();
+
+                // Если выбрана категория
+                if (category !== 'none') {
+                    // Активируем выпадающий список подкатегорий
+                    subcategorySelect.prop('disabled', false);
+
+                    // Добавляем опции для подкатегорий
+                    $.each(subcategories[category], function(index, value) {
+                        subcategorySelect.append($('<option></option>').val(value).html(value));
+                    });
+                } else {
+                    // Деактивируем подкатегорию, если ничего не выбрано
+                    subcategorySelect.prop('disabled', true);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Создание этикетки</title>
+</head>
+<body>
+    <h1>Создание этикетки для {{ template.product_name }}</h1>
+    <form action="/download_label" method="POST">
+        <label>Изготовитель:</label>
+        <input type="text" name="manufacturer" value="{{ template.manufacturer }}"><br><br>
+
+        <label>Место нахождения:</label>
+        <input type="text" name="location" value="{{ template.location }}"><br><br>
+
+        <label>Адрес:</label>
+        <input type="text" name="address" value="{{ template.address }}"><br><br>
+
+        <label>Продукт:</label>
+        <input type="text" name="product_name" value="{{ template.product_name }}"><br><br>
+
+        <label>Состав:</label>
+        <input type="text" name="composition" value="{{ template.composition }}"><br><br>
+
+        <label>Может содержать:</label>
+        <input type="text" name="may_contain" value="{{ template.may_contain }}"><br><br>
+
+        <label>Пищевая ценность:</label>
+        <input type="text" name="nutritional_value" value="{{ template.nutritional_value }}"><br><br>
+
+        <label>Калорийность:</label>
+        <input type="text" name="energi" value="{{ template.energi }}"><br><br>
+
+        <label>Условия хранения:</label>
+        <input type="text" name="storage_conditions" value="{{ template.storage_conditions }}"><br><br>
+
+        <label>Масса нетто:</label>
+        <input type="text" name="net_weight" value="{{ template.net_weight }}"><br><br>
+
+        <label>ГОСТ:</label>
+        <input type="text" name="gost" value="{{ template.gost }}"><br><br>
+
+        <label for="size">Размер этикетки:</label>
+        <select name="size">
+            <option value="90 x 60">90 x 60</option>
+            <option value="58 x 40">58 x 40</option>
+        </select><br><br>
+
+        <label for="file_type">Формат файла:</label>
+        <select name="file_type">
+            <option value="docx">Word (.docx)</option>
+            <option value="txt">Text (.txt)</option>
+            <option value="xlsx">Excel (.xlsx)</option>
+        </select><br><br>
+
+        <button type="submit">Скачать этикетку</button>
+    </form>
+</body>
+</html>

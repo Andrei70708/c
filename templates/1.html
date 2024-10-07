@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Создать шаблон</title>
+</head>
+<body>
+    <h1>Создать новый шаблон</h1>
+    <form action="{{ url_for('create_template') }}" method="post">
+        <label for="category">Категория:</label>
+        <select name="category">
+            <option value="Соки">Соки</option>
+            <option value="Кетчуп">Кетчуп</option>
+            <!-- Можно добавить другие категории -->
+        </select><br><br>
+
+        <label for="template_name">Название шаблона:</label>
+        <input type="text" name="template_name"><br><br>
+
+        <label for="template_text">Текст шаблона:</label><br>
+        <textarea name="template_text" rows="10" cols="50"></textarea><br><br>
+
+        <button type="submit">Создать шаблон</button>
+    </form>
+
+    <br><br>
+    <a href="{{ url_for('index') }}">Вернуться на главную</a>
+</body>
+</html>
+
