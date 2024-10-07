@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Выбор шаблона</title>
+</head>
+<body>
+    <h1>Выберите категорию</h1>
+    <form action="" method="get">
+        <select name="category">
+            {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Выбрать</button>
+    </form>
+
+    <h2>Шаблоны:</h2>
+    {% if request.args.get('category') %}
+        <ul>
+            {% for template_name, template_data in templates[request.args.get('category')].items() %}
+                <li>{{ template_name }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <a href="{{ url_for('create_template') }}">Создать новый шаблон</a>
+</body>
+</html>

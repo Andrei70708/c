@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+</head>
+<body>
+    <h1>Главная страница</h1>
+    <p>Выберите шаблон для создания этикетки:</p>
+    <form action="/generate_label" method="POST">
+        <select name="template_name">
+            {% for template_name in templates %}
+                <option value="{{ template_name }}">{{ template_name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Создать этикетку</button>
+    </form>
+
+    <h2>Создать новый шаблон</h2>
+    <a href="/create_template">Создать новый шаблон</a>
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание этикетки</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        .container {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        select, input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 12px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1976D2;
+        }
+
+        .instruction-btn {
+            background-color: #4CAF50;
+            font-size: 12px;
+            border-radius: 5px;
+            padding: 5px 10px;
+            width: 150px;
+            margin-bottom: 10px;
+        }
+
+        /* Стиль для модального окна */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto; /* Окно центрируется по вертикали */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-height: 80%; /* Ограничение высоты */
+            border-radius: 10px;
+            overflow-y: auto; /* Прокрутка по вертикали */
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .instruction-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .instruction-text h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .instruction-text p {
+            margin-bottom: 10px;
+        }
+
+        .instruction-text ul {
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        .instruction-text ul li {
+            margin-bottom: 5px;
+        }
+
+        /* Адаптивность для маленьких экранов */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .modal-content {
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-grid {
+                grid-template-columns: repeat(1, 1fr);
+            }
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Создание этикетки</h1>
+
+        <!-- Кнопка Инструкция -->
+        <button class="instruction-btn" id="instructionBtn">Инструкция</button>
+
+        <!-- Выбор категории -->
+        <div class="form-group">
+            <label for="category">Выберите категорию:</label>
+            <select id="category" name="category">
+                <option value="none" selected disabled>Выберите категорию</option>
+                <option value="soups">Супы</option>
+                <option value="sauces">Соусы</option>
+            </select>
+        </div>
+
+        <!-- Выбор подкатегории (Шаблонов продуктов) -->
+        <div class="form-group">
+            <label for="subcategory">Выберите подкатегорию (шаблон):</label>
+            <select id="subcategory" name="subcategory" disabled>
+                <option value="none" selected>Выберите подкатегорию</option>
+            </select>
+        </div>
+
+        <!-- Форма -->
+        <form action="/generate" method="POST" class="form-grid">
+            <div class="form-group">
+                <label>Изготовитель:</label>
+                <textarea id="manufacturer" name="manufacturer"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Место нахождения:</label>
+                <textarea id="location" name="location"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Адрес:</label>
+                <textarea id="address" name="address"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Название продукта:</label>
+                <textarea id="product_name" name="product_name"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Состав:</label>
+                <textarea id="composition" name="composition"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Может содержать:</label>
+                <textarea id="may_contain" name="may_contain"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Пищевая ценность:</label>
+                <textarea id="nutritional_value" name="nutritional_value"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Энергетическая ценность:</label>
+                <textarea id="energi" name="energi"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Условия хранения:</label>
+                <textarea id="storage_conditions" name="storage_conditions"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Масса нетто:</label>
+                <textarea id="net_weight" name="net_weight"></textarea>
+            </div>
+
+            <!-- Поле для ввода ГОСТ или ТУ -->
+            <div class="form-group">
+                <label id="doc_type_label">ГОСТ или ТУ:</label>
+                <textarea id="doc_type" name="doc_type"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="size">Размер этикетки:</label>
+                <select name="size">
+                    <option value="90 x 60">90 x 60</option>
+                    <option value="58 x 40">58 x 40</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="file_type">Формат файла:</label>
+                <select name="file_type">
+                    <option value="docx">Word (.docx)</option>
+                    <option value="txt">Text (.txt)</option>
+                    <option value="xlsx">Excel (.xlsx)</option>
+                </select>
+            </div>
+
+            <!-- Поле выбора тары -->
+            <div class="form-group">
+                <label for="container_type">Какая тара будет использоваться?</label>
+                <select id="container_type" name="container_type">
+                    <option value="glass">Стекло</option>
+                    <option value="doypack">Дойпак</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="grid-column: span 4;">
+                <button type="submit">Создать этикетку</button>
+            </div>
+        </form>
+
+        <!-- Модальное окно с инструкцией -->
+        <div id="instructionModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Инструкция по созданию этикетки</h2>
+                <div class="instruction-text">
+                    <h2>Шаг 1: Выбор категории продукта</h2>
+                    <p>Выберите категорию из выпадающего списка. Доступны следующие категории:</p>
+                    <ul>
+                        <li>Супы</li>
+                        <li>Соусы</li>
+                    </ul>
+                    <h2>Шаг 2: Выбор подкатегории (шаблона продукта)</h2>
+                    <p>После выбора категории выберите подкатегорию (шаблон) продукта.</p>
+                    <h2>Шаг 3: Заполнение данных</h2>
+                    <p>Заполните следующие поля:</p>
+                    <ul>
+                        <li><b>Изготовитель:</b> Укажите производителя.</li>
+                        <li><b>Место нахождения:</b> Введите адрес.</li>
+                        <li><b>Адрес:</b> Юридический адрес компании.</li>
+                        <li><b>Название продукта:</b> Название вашего продукта.</li>
+                        <li><b>Состав:</b> Укажите ингредиенты продукта.</li>
+                        <li><b>Пищевая ценность:</b> Укажите пищевую ценность.</li>
+                        <li><b>Энергетическая ценность:</b> Калорийность продукта.</li>
+                    </ul>
+                    <h2>Шаг 4: Настройка этикетки</h2>
+                    <p>Выберите размер этикетки и тип упаковки, затем нажмите "Создать этикетку".</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Определяем категории и подкатегории
+            var subcategories = {
+                soups: ['Борщ', 'Щи', 'Солянка'],
+                sauces: ['Краснодарский', 'Чили', 'Татарский', "Острый", "Башкирский", "Томатный", "Шашлычный", "Лечо"]
+            };
+
+            // Обработка изменения категории
+            $('#category').change(function() {
+                var category = $(this).val();
+                var subcategorySelect = $('#subcategory');
+
+                // Очищаем предыдущие опции подкатегории
+                subcategorySelect.empty();
+
+                // Если выбрана категория
+                if (category !== 'none') {
+                    // Активируем выпадающий список подкатегорий
+                    subcategorySelect.prop('disabled', false);
+
+                    // Добавляем опции для подкатегорий
+                    $.each(subcategories[category], function(index, value) {
+                        subcategorySelect.append($('<option></option>').val(value).html(value));
+                    });
+                } else {
+                    // Деактивируем подкатегорию, если ничего не выбрано
+                    subcategorySelect.prop('disabled', true);
+                }
+            });
+
+            // При выборе подкатегории автозаполняем поля из шаблона
+            $('#subcategory').change(function() {
+                var selectedProduct = $(this).val();
+
+                if (selectedProduct !== 'none') {
+                    $.ajax({
+                        url: '/get_template_data',
+                        method: 'POST',
+                        data: { product_name: selectedProduct },
+                        success: function(response) {
+                            $('#manufacturer').val(response.manufacturer);
+                            $('#location').val(response.location);
+                            $('#address').val(response.address);
+                            $('#product_name').val(response.product_name);
+                            $('#composition').val(response.composition);
+                            $('#may_contain').val(response.may_contain);
+                            $('#nutritional_value').val(response.nutritional_value);
+                            $('#energi').val(response.energi);
+                            $('#storage_conditions').val(response.storage_conditions);
+                            $('#net_weight').val(response.net_weight);
+                            $('#doc_type').val(response.gost);  // Заполняем поле ГОСТ/ТУ
+                        }
+                    });
+                }
+            });
+
+            // Скрипт для работы с модальным окном инструкции
+            var modal = document.getElementById("instructionModal");
+            var btn = document.getElementById("instructionBtn");
+            var span = document.getElementsByClassName("close")[0];
+
+            // Открытие модального окна при клике на кнопку
+            btn.onclick = function() {
+                modal.style.display = "block";
+            }
+
+            // Закрытие окна при нажатии на крестик
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // Закрытие окна при клике вне окна
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
